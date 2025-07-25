@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class PlannedClass extends Model
 {
@@ -142,4 +143,21 @@ class PlannedClass extends Model
     {
         return $query->where('class_type', $classType);
     }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'planned_class_tag');
+    }
+
+    public function getTagNamesAttribute(): array
+    {
+        return $this->tags->pluck('name')->toArray();
+    }
+
+    protected $appends = [
+        'formatted_time',
+        'status_label',
+        'class_type_label',
+        'tag_names'
+    ];
 }

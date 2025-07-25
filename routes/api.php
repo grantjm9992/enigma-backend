@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\RoutineController;
+use App\Http\Controllers\Api\ExerciseController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PlannedClassController;
+use App\Http\Controllers\Api\RoutineCompletionController;
+use App\Http\Controllers\Api\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +55,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Student management routes
     Route::prefix('students')->group(function () {
-
         // All authenticated users can view students (with appropriate filtering)
         Route::get('/', [StudentController::class, 'index']);
         Route::get('/statistics', [StudentController::class, 'statistics']);
@@ -67,5 +72,85 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::middleware('role:admin,trainer')->group(function () {
             Route::post('/{student}/tactical-notes', [StudentController::class, 'updateTacticalNotes']);
         });
+    });
+
+    // Category management routes
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index']);
+        Route::get('/{category}', [CategoryController::class, 'show']);
+        Route::post('/', [CategoryController::class, 'store']);
+        Route::put('/{category}', [CategoryController::class, 'update']);
+        Route::delete('/{category}', [CategoryController::class, 'destroy']);
+        Route::post('/sort-order', [CategoryController::class, 'updateSortOrder']);
+        Route::get('/statistics/usage', [CategoryController::class, 'usageStatistics']);
+    });
+
+    // Exercise management routes
+    Route::prefix('exercises')->group(function () {
+        Route::get('/', [ExerciseController::class, 'index']);
+        Route::get('/{exercise}', [ExerciseController::class, 'show']);
+        Route::post('/', [ExerciseController::class, 'store']);
+        Route::put('/{exercise}', [ExerciseController::class, 'update']);
+        Route::delete('/{exercise}', [ExerciseController::class, 'destroy']);
+        Route::post('/{exercise}/clone', [ExerciseController::class, 'clone']);
+        Route::post('/{exercise}/toggle-favorite', [ExerciseController::class, 'toggleFavorite']);
+        Route::get('/statistics/usage', [ExerciseController::class, 'usageStatistics']);
+    });
+
+    // Routine management routes
+    Route::prefix('routines')->group(function () {
+        Route::get('/', [RoutineController::class, 'index']);
+        Route::get('/{routine}', [RoutineController::class, 'show']);
+        Route::post('/', [RoutineController::class, 'store']);
+        Route::put('/{routine}', [RoutineController::class, 'update']);
+        Route::delete('/{routine}', [RoutineController::class, 'destroy']);
+        Route::post('/{routine}/clone', [RoutineController::class, 'clone']);
+        Route::post('/{routine}/toggle-favorite', [RoutineController::class, 'toggleFavorite']);
+        Route::post('/{routine}/toggle-active', [RoutineController::class, 'toggleActive']);
+        Route::get('/statistics/usage', [RoutineController::class, 'usageStatistics']);
+    });
+
+    // Planned Class management routes
+    Route::prefix('planned-classes')->group(function () {
+        Route::get('/', [PlannedClassController::class, 'index']);
+        Route::get('/{plannedClass}', [PlannedClassController::class, 'show']);
+        Route::post('/', [PlannedClassController::class, 'store']);
+        Route::put('/{plannedClass}', [PlannedClassController::class, 'update']);
+        Route::delete('/{plannedClass}', [PlannedClassController::class, 'destroy']);
+        Route::post('/{plannedClass}/duplicate', [PlannedClassController::class, 'duplicate']);
+        Route::post('/{plannedClass}/complete', [PlannedClassController::class, 'markComplete']);
+        Route::get('/calendar/view', [PlannedClassController::class, 'calendarView']);
+        Route::get('/upcoming/list', [PlannedClassController::class, 'upcomingClasses']);
+        Route::get('/statistics', [PlannedClassController::class, 'statistics']);
+    });
+
+    // Routine Completion routes
+    Route::prefix('routine-completions')->group(function () {
+        Route::get('/', [RoutineCompletionController::class, 'index']);
+        Route::get('/{routineCompletion}', [RoutineCompletionController::class, 'show']);
+        Route::post('/', [RoutineCompletionController::class, 'store']);
+        Route::put('/{routineCompletion}', [RoutineCompletionController::class, 'update']);
+        Route::delete('/{routineCompletion}', [RoutineCompletionController::class, 'destroy']);
+        Route::get('/statistics/daily', [RoutineCompletionController::class, 'dailyStats']);
+        Route::get('/statistics/student', [RoutineCompletionController::class, 'studentStats']);
+        Route::get('/statistics/category', [RoutineCompletionController::class, 'categoryStats']);
+        Route::post('/export', [RoutineCompletionController::class, 'exportData']);
+    });
+
+    // Tag management routes
+    Route::prefix('tags')->group(function () {
+        Route::get('/', [TagController::class, 'index']);
+        Route::get('/{tag}', [TagController::class, 'show']);
+        Route::post('/', [TagController::class, 'store']);
+        Route::put('/{tag}', [TagController::class, 'update']);
+        Route::delete('/{tag}', [TagController::class, 'destroy']);
+        Route::get('/statistics/usage', [TagController::class, 'usageStatistics']);
+    });
+
+    // Dashboard and Analytics routes
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/overview', [DashboardController::class, 'overview']);
+        Route::get('/analytics', [DashboardController::class, 'analytics']);
+        Route::get('/recent-activity', [DashboardController::class, 'recentActivity']);
     });
 });

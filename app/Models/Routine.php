@@ -40,6 +40,14 @@ class Routine extends Model
         'notion_page_id',
     ];
 
+    protected $appends = [
+        'formatted_duration',
+        'stats',
+        'work_type_distribution',
+        'upcoming_schedules',
+        'tag_names'
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -77,6 +85,16 @@ class Routine extends Model
     {
         return $this->belongsToMany(Category::class, 'routine_categories')
             ->withTimestamps();
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'routine_tag');
+    }
+
+    public function getTagNamesAttribute(): array
+    {
+        return $this->tags->pluck('name')->toArray();
     }
 
     /**

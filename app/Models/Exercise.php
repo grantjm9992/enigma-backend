@@ -345,4 +345,20 @@ class Exercise extends Model
             ->with(['categories', 'creator'])
             ->get();
     }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'exercise_tag');
+    }
+
+    public function getTagNamesAttribute(): array
+    {
+        return $this->tags->pluck('name')->toArray();
+    }
+
+    protected $appends = [
+        'formatted_duration',
+        'stats',
+        'tag_names'
+    ];
 }

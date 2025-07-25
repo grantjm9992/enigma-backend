@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -163,4 +164,16 @@ class Category extends Model
                 ->first(),
         ];
     }
+
+    public function routineCompletions(): HasMany
+    {
+        return $this->hasMany(RoutineCompletion::class);
+    }
+
+    protected $appends = [
+        'usage_stats',
+        'total_minutes',
+        'average_rating',
+        'popular_exercises'
+    ];
 }

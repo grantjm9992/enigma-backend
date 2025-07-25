@@ -40,7 +40,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['routine_id', 'completed_at']);
-            $table->index(['completed_at', 'morning_session', 'afternoon_session']);
+            $table->index(['completed_at', 'morning_session', 'afternoon_session'], 'routine_m_a_completed_at');
             $table->index(['completed_by', 'completed_at']);
         });
 
@@ -54,7 +54,7 @@ return new class extends Migration
             $table->boolean('completed_full_session')->default(true);
             $table->timestamps();
 
-            $table->unique(['routine_completion_id', 'student_id']);
+            $table->unique(['routine_completion_id', 'student_id'], 'rca_rc_s');
             $table->index(['student_id', 'created_at']);
         });
 

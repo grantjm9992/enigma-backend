@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -167,5 +168,25 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeAdmins($query)
     {
         return $query->where('role', 'admin');
+    }
+
+    public function completedRoutines(): HasMany
+    {
+        return $this->hasMany(RoutineCompletion::class, 'completed_by');
+    }
+
+    public function createdRoutines(): HasMany
+    {
+        return $this->hasMany(Routine::class, 'created_by');
+    }
+
+    public function createdExercises(): HasMany
+    {
+        return $this->hasMany(Exercise::class, 'created_by');
+    }
+
+    public function createdPlannedClasses(): HasMany
+    {
+        return $this->hasMany(PlannedClass::class, 'created_by');
     }
 }

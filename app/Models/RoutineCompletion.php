@@ -109,4 +109,9 @@ class RoutineCompletion extends Model
     {
         return $query->whereNotNull('rating');
     }
+
+    public function completedByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'completed_by');
+    }
 }
